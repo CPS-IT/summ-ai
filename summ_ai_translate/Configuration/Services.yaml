@@ -1,0 +1,23 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  THB\SummAiTranslate\:
+    resource: '../Classes/*'
+
+  dashboard.widget.thb.summ_ai_translate.usagewidget:
+    class: 'THB\SummAiTranslate\Widgets\UsageWidget'
+    arguments:
+      $options:
+        refreshAvailable: true
+    tags:
+      - name: dashboard.widget
+        identifier: 'thb-summ-ai-translate-usagewidget'
+        groupNames: 'general'
+        title: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.usagewidget.title'
+        description: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.usagewidget.description'
+        iconIdentifier: 'summ-ai-logo'
+        height: 'small'
+        width: 'small'
