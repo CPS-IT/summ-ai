@@ -20,6 +20,8 @@ API token provided by SUMM AI GmbH is used for HTTP requests.
 * tbu.
 * Dashboard widget showing amount of available characters to translate.
   * Source file located under `Classes\Widgets\UsageWidget.php`
+  * ![image](https://github.com/user-attachments/assets/5cf1c78b-eaea-44ea-a703-df66da52dbdc)
+  * ![image](https://github.com/user-attachments/assets/5efc2503-e1b0-4aa0-80e0-5a096257a65b)
 
 ## License
 
