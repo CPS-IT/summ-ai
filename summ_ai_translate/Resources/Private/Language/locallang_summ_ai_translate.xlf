@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:summ_ai_translate/Resources/Private/Language/locallang_summ_ai_translate.xlf" date="2024-07-28T13:37:45Z" product-name="summ_ai_translate">
+		<header/>
+		<body>
+			<trans-unit id="widgets.usagewidget.title" resname="widgets.usagewidget.title">
+				<source>SUMM AI Translate Usage Widget</source>
+			</trans-unit>
+			<trans-unit id="widgets.usagewidget.description_text" resname="widgets.usagewidget.description_text">
+				<source>SUMM AI usage data for backend dashboard as text.</source>
+			</trans-unit>
+			<trans-unit id="widgets.usagewidget.header" resname="widgets.usagewidget.header">
+				<source>SUMM AI Usage Data</source>
+			</trans-unit>
+			<trans-unit id="widgets.usagewidget.body_1" resname="widgets.usagewidget.body_1">
+				<source> of </source>
+			</trans-unit>
+			<trans-unit id="widgets.usagewidget.body_2" resname="widgets.usagewidget.body_2">
+				<source> characters left.</source>
+			</trans-unit>
+			<trans-unit id="widgets.usagewidget.error" resname="widgets.usagewidget.error">
+				<source>No API key assigned in site configuration.</source>
+			</trans-unit>
+			<trans-unit id="widgets.usagewidget.description_graph" resname="widgets.usagewidget.description_graph">
+				<source>SUMM AI usage data for backend dashboard as doughnut chart.</source>
+			</trans-unit>
+			<trans-unit id="widgets.unpublishedwidget.header" resname="widgets.unpublishedwidget.header">
+				<source>SUMM AI Unpublished Translations </source>
+			</trans-unit>
+			<trans-unit id="widgets.unpublishedwidget.description" resname="widgets.unpublishedwidget.description">
+				<source>Overview of records in Plain language that are pending publishing.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

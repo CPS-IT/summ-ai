@@ -1,0 +1,55 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  THB\SummAiTranslate\:
+    resource: '../Classes/*'
+
+  dashboard.widget.thb.summ_ai_translate.usagewidget:
+    class: 'THB\SummAiTranslate\Widgets\UsageWidget'
+    arguments:
+      $options:
+        refreshAvailable: true
+    tags:
+      - name: dashboard.widget
+        identifier: 'thb-summ-ai-translate-usagewidget'
+        groupNames: 'general'
+        title: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.usagewidget.title'
+        description: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.usagewidget.description_text'
+        iconIdentifier: 'summ-ai-logo'
+        height: 'small'
+        width: 'small'
+
+  dashboard.widget.thb.summ_ai_translate.usagewidget.chart:
+    class: 'TYPO3\CMS\Dashboard\Widgets\DoughnutChartWidget'
+    arguments:
+      $dataProvider: '@THB\SummAiTranslate\Widgets\Provider\UsageDataProvider'
+      $options:
+        refreshAvailable: true
+    tags:
+      - name: dashboard.widget
+        identifier: 'thb-summ-ai-translate-usagewidget-graph'
+        groupNames: 'general'
+        title: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.usagewidget.header'
+        description: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.usagewidget.description_graph'
+        iconIdentifier: 'summ-ai-logo'
+        height: 'medium'
+        width: 'small'
+
+  dashboard.widget.thb.summ_ai_translate.unpublishedwidget:
+    class: 'TYPO3\CMS\Dashboard\Widgets\ListWidget'
+    arguments:
+      $dataProvider: '@THB\SummAiTranslate\Widgets\Provider\UnpublishedDataProvider'
+      $options:
+        refreshAvailable: true
+    tags:
+      - name: dashboard.widget
+        identifier: 'thb-summ-ai-translate-unpublishedwidget'
+        groupNames: 'general'
+        title: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.unpublishedwidget.header'
+        description: 'LLL:EXT:summ_ai_translate/Resources/Private/Language/de.locallang_summ_ai_translate.xlf:widgets.unpublishedwidget.description'
+        iconIdentifier: 'summ-ai-logo'
+        height: 'medium'
+        width: 'small'

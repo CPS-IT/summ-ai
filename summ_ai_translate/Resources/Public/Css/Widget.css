@@ -1,0 +1,24 @@
+.widget .widget-content .widget-content-title {
+    background: #374d5d !important;
+    color: #ffff !important;
+}
+
+.header {
+    padding: 10px 20px;
+    padding-inline-end: 76px;
+    border-bottom: 1px solid #d7d7d7;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+    background: #374d5d;
+    color: #ffff
+}
+
+.body {
+    font-size: 1.2em;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
