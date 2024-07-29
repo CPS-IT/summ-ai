@@ -17,11 +17,26 @@ API token provided by SUMM AI GmbH is used for HTTP requests.
 
 ## Contents
 
-* tbu.
-* Dashboard widget showing amount of available characters to translate.
-  * Source file located under `Classes\Widgets\UsageWidget.php`
-  * ![image](https://github.com/user-attachments/assets/5cf1c78b-eaea-44ea-a703-df66da52dbdc)
-  * ![image](https://github.com/user-attachments/assets/5efc2503-e1b0-4aa0-80e0-5a096257a65b)
+### Dashboard widgets
+Configuration for widgets is located in `Services.yaml` file.
+1.  Widget showing amount of available characters to translate as a text.
+   Source file located under `Classes\Widgets\UsageWidget.php`
+2. Widget showing amount of available characters to translate as a doughnut chart.
+   Data provider for graph located under `Classes\Widgets\Provider\UsageDataProvider.php`
+3. Widget showing a list of translations in Easy German in state 'hidden' (unpublished).
+   Data provider for list located under `Classes\Widgets\Provider\UnpublishedDataProvider.php`
+
+### Translation Workflow
+1. Extension configuration required in `Site Configuration`:
+   1. Easy Language is set up manually
+   2. All fields defined in `Configuration\SiteConfiguration\Overrides\sites.php` are filled out in backend.
+2. `DataHandler.php` hook is responsible for triggering translation upon action `new` and `update` on a tt_content with `sys_lanuage_id` of standard German setup in previous step.
+   1. Utility class `SummAiTranslator.php` class is responsible for either creating new translation via POST request to Summ Ai API or updating existing one (depends on action on tt_content).
+   2. Created / updated translation has a `sys_language_id` of Easy German defined in step 1.
+   3. Utility class `RecordHelper.php` is responsible for database queries (creating and updating translation records for tt_content).
+   4. Utility class `RequestHelper.php` is responsible for API request processing.
+   5. Utility class `TranslationHelper.php` provides various support functions for `SummAiTranslator.php` class and widgets.
+3. As of now translation is done automatically on tt_content level, meaning that for translation of already existing entries it needs to be enabled and disabled to trigger the hook.
 
 ## License
 
