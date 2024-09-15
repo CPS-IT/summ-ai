@@ -13,3 +13,4 @@ return [
         'source' => 'EXT:summ_ai_translate/Resources/Public/Icons/Extension.svg',
     ],
 ];
+

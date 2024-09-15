@@ -9,20 +9,36 @@ class SummAiTranslator
 {
     private static string $TEXT_FIELD_SEPARATOR = ' / ';
 
-    function __construct($pageId)
+    /**
+     * Constructor for SummAiTranslator class.
+     *
+     * @param int $pageId The ID of the page.
+     * @param array $siteConfig The site configuration array.
+     */
+    function __construct(int $pageId, array $siteConfig)
     {
         $this->logger = GeneralUtility::makeInstance('TYPO3\CMS\Core\Log\LogManager')->getLogger(__CLASS__);
         $this->pageId = $pageId;
-        $this->apiKey = TranslationHelper::getApiKey($pageId);
-        $this->langIdDeStandard = TranslationHelper::getSiteConfigurationByPageId($pageId, 'summAiLangIdDeStandard');
-        $this->langIdDePlain = TranslationHelper::getSiteConfigurationByPageId($pageId, 'summAiLangIdDePlain');
-        $this->pageTextFields = TranslationHelper::getSiteConfigurationByPageId($pageId, 'summAiLangTextFields');
-        $this->pageHeader = TranslationHelper::getSiteConfigurationByPageId($pageId, 'summAiHeader');
-        $this->pageSubheader = TranslationHelper::getSiteConfigurationByPageId($pageId, 'summAiSubheader');
+        $this->apiKey = $siteConfig['summAiApiKey'];
+        $this->langIdDeStandard = $siteConfig['summAiLangIdDeStandard'];
+        $this->langIdDePlain = $siteConfig['summAiLangIdDePlain'];
+        $this->pageTextFields = $siteConfig['summAiLangTextFields'];
+        $this->pageHeader = $siteConfig['summAiHeader'];
+        $this->pageSubheader = $siteConfig['summAiSubheader'];
     }
 
+    /**
+     * Translates the content of a record and creates a new entry in tt_content
+     *
+     * @param string $table The name of the table.
+     * @param int $recordUid The unique identifier of the record.
+     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject The parent object.
+     * @return void
+     */
     public function translateContent(string $table, int $recordUid, \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject): void
     {
+        $startTime = microtime(true);
+
         if ($this->apiKey === null) {
             return;
         }
@@ -41,7 +57,11 @@ class SummAiTranslator
         $localizedUid = self::createLocalization($table, $recordUid);
         $localizedCols = self::translateRecordText($record);
         RecordHelper::updateRecord($table, $localizedUid, $localizedCols);
-        $this->logger->warning('Translation in Easy German for record {recordUid} from page {pageId} created: {localizedUid}', ['pageId' => $this->pageId, 'recordUid' => $recordUid, 'localizedUid' => $localizedUid]);
+
+        $endTime = microtime(true);
+
+        $this->logger->warning('Translation in Easy German {localizedUid} for record {recordUid} from page {pageId} created in {time} s.',
+            ['pageId' => $this->pageId, 'recordUid' => $recordUid, 'localizedUid' => $localizedUid, 'time' => $endTime - $startTime]);
     }
 
     /**
@@ -54,6 +74,8 @@ class SummAiTranslator
      */
     public function updateTranslation(string $table, int $recordUid, \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject): void
     {
+        $startTime = microtime(true);
+
         if ($this->apiKey === null) {
             return;
         }
@@ -72,8 +94,19 @@ class SummAiTranslator
 
         $localizedCols = self::translateRecordText($record);
         RecordHelper::updateRecord($table, $recordTranslation['uid'], $localizedCols);
+
+        $endTime = microtime(true);
+
+        $this->logger->warning('Translation in Easy German {uid} for record {recordUid} from page {pageId} updated in {time} s.',
+            ['pageId' => $this->pageId, 'recordUid' => $recordUid,  'uid'=> $recordTranslation['uid'], 'time' => $endTime - $startTime]);
     }
 
+    /**
+     * Translates the text fields of a record using the provided API key and returns the localized columns.
+     *
+     * @param array $record The record to be translated.
+     * @return array The localized columns of the record.
+     */
     private function translateRecordText(array $record): array
     {
         $textfields = explode(self::$TEXT_FIELD_SEPARATOR, $this->pageTextFields);
@@ -87,6 +120,14 @@ class SummAiTranslator
         }
         //Translate each text field
         foreach ($localizedCols as $key => $value) {
+            if ($key === $this->pageSubheader) {
+                $localizedCols[$key] = '';
+            } else if ($key === $this->pageHeader) {
+                $localizedCols[$key] = RequestHelper::callEndpoint('translate', $this->apiKey, $value, true);
+            } else {
+                $localizedCols[$key] = RequestHelper::callEndpoint('translate', $this->apiKey, $value);
+            }
+            /*
             if ($key === $this->pageHeader) {
                 $localizedCols[$key] = 'Leichte Sprache: ' . $value;
             } else if ($key === $this->pageSubheader) {
@@ -94,8 +135,9 @@ class SummAiTranslator
             } else {
                 $localizedCols[$key] = RequestHelper::callEndpoint('translate', $this->apiKey, $value);
             }
+            */
         }
-        $this->logger->warning('Translation: {localizedCols}', ['localizedCols' => $localizedCols]);
+        //$this->logger->warning('Translation: {localizedCols}', ['localizedCols' => $localizedCols]);
         return $localizedCols;
     }
 

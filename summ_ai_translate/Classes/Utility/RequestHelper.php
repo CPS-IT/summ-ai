@@ -22,7 +22,7 @@ class RequestHelper
      * @param string|null $body The optional body to send with the request.
      * @return array|string The response data from the endpoint, or null if the endpoint is invalid.
      */
-    public static function callEndpoint(string $endpoint, ?string $apiKey = null, ?string $body = null): array | string
+    public static function callEndpoint(string $endpoint, ?string $apiKey = null, ?string $body = null, ?bool $text = false): array | string
     {
         if(!$apiKey) {
             $apiKey = TranslationHelper::getApiKey();
@@ -33,7 +33,7 @@ class RequestHelper
             return self::requestUsage($apiKey, $url);
         }
         if ($endpoint === 'translate') {
-            return self::requestTranslation($apiKey, $url, $body);
+            return self::requestTranslation($apiKey, $url, $body, $text);
         }
         return [];
     }
@@ -99,8 +99,11 @@ class RequestHelper
      * @return string The translated text.
      * @throws \RuntimeException If the response is invalid.
      */
-    private static function requestTranslation(string $apiKey, string $url, string $textToTranslate): string
+    private static function requestTranslation(string $apiKey, string $url, string $textToTranslate, bool $text): string
     {
+        //Prevent header to be translated with html tags as TYPO3 tt_content header can only render plain text
+        $inputTextType = $text ? 'plain_text' : 'html';
+
         $headers = [
             'Authorization' => 'Api-Key ' . $apiKey,
             'Content-Type' => 'application/json'
@@ -108,7 +111,7 @@ class RequestHelper
         $requestBody = [
             'input_text' => $textToTranslate,
             'user' => 'user',
-            'input_text_type' => 'html',
+            'input_text_type' => $inputTextType,
             'output_language_level' => 'easy',
             'separator' => 'hyphen',
             'embolden_negative' => false

@@ -35,11 +35,11 @@ class DataHandler implements SingletonInterface
         }
         $pid = $parentObject->getPID($table, $recordUid);
         $pageId = ($pid === 0 && $table === 'pages') ? $recordUid : $pid;
-        $translationAllowed = TranslationHelper::getSiteConfigurationByPageId($pageId, 'summAiAutotranslate');
-        if ($translationAllowed === false) {
+        $siteConfig = TranslationHelper::getSiteConfigurationByPageId($pageId);
+        if ($siteConfig['summAiAutotranslate'] === false) {
             return;
         }
-        $translator = GeneralUtility::makeInstance(SummAiTranslator::class, $pageId);
+        $translator = GeneralUtility::makeInstance(SummAiTranslator::class, $pageId, $siteConfig);
         // Create translation if record is new, otherwise update existing one
         if ($status === 'update') {
             $translator->updateTranslation($table, $recordUid, $parentObject);
